@@ -23,7 +23,7 @@ LOGO_MARCA_DAGUA = "marca_dagua.png"
 QRCODE = "qrcode.png"
 
 st.set_page_config(
-    page_title="Atualizador de PDF - Atualização Modulo Topaz",
+    page_title="Atualizador - Módulo Topaz",
     page_icon="📄",
     layout="centered"
 )
@@ -54,14 +54,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center;'>Atualizador de PDF - Atualização Modulo Topaz</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Atualizador - Módulo Topaz</h1>", unsafe_allow_html=True)
 st.markdown("<p class='subtext'>Escolha entre preencher manualmente ou colar os dados da ficha</p>", unsafe_allow_html=True)
 
 def extrair_dados_ficha(texto_ficha):
     dados = {
-        "RAZÃO": "",
+        "RAZÃO SOCIAL": "",
         "CNPJ": "",
-        "SITUAÇÃO ATIVA": "ATIVA",
+        "SITUAÇÃO": "ATIVA",
         "CPF MASTER": "",
     }
 
@@ -87,16 +87,16 @@ def extrair_dados_ficha(texto_ficha):
     # 2. Extração de Razão Social
     match_razao = re.search(r"RAZ[ÃA]O\s*(?:SOCIAL)?[:\s]+([^\n\r]+)", texto_limpo, re.IGNORECASE)
     if match_razao:
-        dados["RAZÃO"] = match_razao.group(1).strip()
+        dados["RAZÃO SOCIAL"] = match_razao.group(1).strip()
     else:
         match_nome = re.search(r"NOME FANTASIA[:\s]+([^\n\r]+)", texto_limpo, re.IGNORECASE)
         if match_nome:
-            dados["RAZÃO"] = match_nome.group(1).strip()
+            dados["RAZÃO SOCIAL"] = match_nome.group(1).strip()
 
     # 3. Extração da Situação
-    match_sit = re.search(r"SITUA[ÇC][ÃA]O(?:\s+CADASTRAL|\s+MODULO\s+TOPAZ)?[:\s]+([^\n\r]+)", texto_limpo, re.IGNORECASE)
+    match_sit = re.search(r"SITUA[ÇC][ÃA]O(?:\s+CADASTRAL|\s+ATIVA)?[:\s]+([^\n\r]+)", texto_limpo, re.IGNORECASE)
     if match_sit:
-        dados["SITUAÇÃO ATIVA"] = match_sit.group(1).strip().upper()
+        dados["SITUAÇÃO"] = match_sit.group(1).strip().upper()
 
     # 4. Extração do CPF Master
     match_cpf_master = re.search(r"(?:CPF\s+USU[ÁA]RIO\s+MASTER|CPF\s+MASTER)[:\s]+([\d.-]+)", texto_limpo, re.IGNORECASE)
@@ -194,9 +194,9 @@ def adicionar_marca_dagua(canvas, doc):
     canvas.restoreState()
 
 def gerar_pdf(pasta_script, dados_empresa):
-    razao = dados_empresa.get("RAZÃO", "EMPRESA")
+    razao = dados_empresa.get("RAZÃO SOCIAL", "EMPRESA")
     razao_limpa = re.sub(r'[\\/*?:"<>|]', "", razao)
-    nome_pdf = f"ATUALIZAÇÃO MODULO TOPAZ - {razao_limpa}.pdf"
+    nome_pdf = f"ATUALIZAÇÃO DO MÓDULO TOPAZ - {razao_limpa}.pdf"
     caminho_pdf = os.path.join(pasta_script, nome_pdf)
 
     doc = SimpleDocTemplate(caminho_pdf, pagesize=A4, rightMargin=45, leftMargin=45, topMargin=45, bottomMargin=45)
@@ -219,15 +219,15 @@ def gerar_pdf(pasta_script, dados_empresa):
     story.append(cab)
     story.append(Spacer(1, 22))
 
-    story.append(Paragraph("ATUALIZAÇÃO MODULO TOPAZ", estilo_sub))
+    story.append(Paragraph("ATUALIZAÇÃO DO MÓDULO TOPAZ", estilo_sub))
     story.append(Spacer(1, 6))
-    story.append(Paragraph("Em conformidade com as diretrizes de autorregulação bancária e as boas práticas estabelecidas pelo sistema financeiro nacional, comunicamos que a atualização modulo topaz de empresas junto ao Internet Banking Empresarial é procedimento obrigatório e periódico.", estilo_texto))
+    story.append(Paragraph("Em conformidade com as diretrizes de segurança bancária e as boas práticas estabelecidas pelo Sistema Financeiro Nacional, comunicamos que a atualização do Módulo Topaz para acesso ao Internet Banking Empresarial é um procedimento obrigatório e periódico.", estilo_texto))
     story.append(Spacer(1, 18))
 
     story.append(Paragraph("DADOS DO MASTER:", estilo_secao))
     story.append(Spacer(1, 6))
     
-    ordem_chaves = ["RAZÃO", "CNPJ", "SITUAÇÃO ATIVA", "CPF MASTER"]
+    ordem_chaves = ["RAZÃO SOCIAL", "CNPJ", "SITUAÇÃO", "CPF MASTER"]
     tabela = []
     for k in ordem_chaves:
         if k in dados_empresa and dados_empresa[k]:
@@ -238,24 +238,24 @@ def gerar_pdf(pasta_script, dados_empresa):
     story.append(t)
     story.append(Spacer(1, 18))
 
-    story.append(Paragraph("A atualização modulo topaz tem como finalidade:", estilo_texto))
+    story.append(Paragraph("A atualização do Módulo Topaz tem como finalidade:", estilo_texto))
     story.append(Spacer(1, 8))
 
     check = CheckVerde(tamanho=10)
     for item in [
-        "Garantir a segurança das operações financeiras;",
-        "Manter os dados da empresa e de seus representantes legais atualizados;",
-        "Atender às exigências regulatórias vigentes;",
-        "Prevenir fraudes e inconsistências cadastrais.",
+        "Garantir a segurança e integridade das operações financeiras;",
+        "Manter os componentes de autenticação e proteção devidamente atualizados;",
+        "Atender às exigências regulatórias e de segurança vigentes;",
+        "Prevenir fraudes e vulnerabilidades no acesso ao sistema.",
     ]:
         row = Table([[check, Paragraph(item, estilo_topico)]], colWidths=[18, 467])
         row.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (0, 0), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 4), ("TOPPADDING", (0, 0), (-1, -1), 4)]))
         story.append(row)
 
     story.append(Spacer(1, 18))
-    story.append(Paragraph("Reforçamos que a não realização da atualização dentro do prazo estabelecido poderá acarretar restrições operacionais, incluindo limitações temporárias de acesso a determinados serviços bancários.", estilo_texto))
+    story.append(Paragraph("Reforçamos que a não realização da atualização dentro do prazo estabelecido poderá acarretar restrições operacionais, incluindo limitações temporárias de acesso ao sistema bancário.", estilo_texto))
     story.append(Spacer(1, 14))
-    story.append(Paragraph("A atualização pode ser realizada diretamente pelo Gerenciador CAIXA empresas, acessando o menu de Cadastro/Atualização Modulo Topaz, ou mediante comparecimento à agência de relacionamento.", estilo_texto))
+    story.append(Paragraph("A atualização pode ser realizada diretamente pelo Gerenciador CAIXA empresas, acessando o menu de Segurança / Atualização do Módulo Topaz, ou mediante comparecimento à agência de relacionamento.", estilo_texto))
     story.append(Spacer(1, 14))
     story.append(Paragraph("Em caso de dúvidas, recomenda-se entrar em contato com seu gerente de contas ou com a central de atendimento empresarial.", estilo_texto))
     story.append(Spacer(1, 25))
@@ -274,12 +274,12 @@ def gerar_pdf(pasta_script, dados_empresa):
     doc.build(story, onFirstPage=adicionar_marca_dagua, onLaterPages=adicionar_marca_dagua)
     return caminho_pdf
 
-# Inicialização garantida do estado
+# Inicialização do estado
 if 'dados_empresa' not in st.session_state:
     st.session_state['dados_empresa'] = {
-        "RAZÃO": "",
+        "RAZÃO SOCIAL": "",
         "CNPJ": "",
-        "SITUAÇÃO ATIVA": "ATIVA",
+        "SITUAÇÃO": "ATIVA",
         "CPF MASTER": "",
     }
 
@@ -298,35 +298,7 @@ if modo_entrada == "Colar Ficha (Automático)":
         else:
             st.warning("Por favor, cole uma ficha na caixa de texto acima.")
 
-# Campos sempre visíveis na interface
+# Campos sempre visíveis
 dados = st.session_state['dados_empresa']
 st.markdown("---")
-st.subheader("DADOS PARA O PDF")
-
-col1, col2 = st.columns(2)
-with col1:
-    razao = st.text_input("RAZÃO", value=dados.get("RAZÃO", ""))
-    cnpj_val = st.text_input("CNPJ", value=dados.get("CNPJ", ""))
-with col2:
-    situacao = st.text_input("SITUAÇÃO ATIVA", value=dados.get("SITUAÇÃO ATIVA", "ATIVA"))
-    cpf_master = st.text_input("CPF MASTER", value=dados.get("CPF MASTER", ""))
-
-dados_atualizados = {
-    "RAZÃO": razao,
-    "CNPJ": cnpj_val,
-    "SITUAÇÃO ATIVA": situacao,
-    "CPF MASTER": cpf_master,
-}
-
-if st.button("Gerar PDF Pronto", type="primary"):
-    if not razao.strip() or not cnpj_val.strip():
-        st.error("Preencha pelo menos a Razão Social e o CNPJ para gerar o PDF.")
-    else:
-        caminho_pdf = gerar_pdf(PASTA_SCRIPT, dados_atualizados)
-        with open(caminho_pdf, "rb") as f:
-            st.download_button(
-                label="📥 Clique aqui para salvar o PDF",
-                data=f,
-                file_name=os.path.basename(caminho_pdf),
-                mime="application/pdf"
-            )
+st.subheader("DADOS PARA
