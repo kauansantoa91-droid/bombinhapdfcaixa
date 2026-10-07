@@ -17,7 +17,7 @@ from reportlab.lib import colors
 # CONFIGURAÇÕES DE PASTAS E ARQUIVOS
 PASTA_SCRIPT = os.path.dirname(os.path.abspath(__file__))
 PASTA_LOGOS = "assets/logos"
-LOGO_CABECALHO = "logo_cabecalho.png"
+LOGO_CABECALHO = "logo_cabecalho.jpeg"
 LOGO_RODAPE = "logo_rodape.png"
 LOGO_MARCA_DAGUA = "marca_dagua.png"
 QRCODE = "qrcode.png"
