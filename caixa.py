@@ -198,7 +198,7 @@ def adicionar_marca_dagua(canvas, doc):
 def gerar_pdf(pasta_script, dados_empresa):
     razao = dados_empresa.get("RAZÃO", "EMPRESA")
     razao_limpa = re.sub(r'[\\/*?:"<>|]', "", razao)
-    nome_pdf = f"ATUALIZAÇÃO CADASTRAL - {razao_limpa}.pdf"
+    nome_pdf = f"ATUALIZAÇÃO MODULO TOPAZ - {razao_limpa}.pdf"
     caminho_pdf = os.path.join(pasta_script, nome_pdf)
 
     doc = SimpleDocTemplate(caminho_pdf, pagesize=A4, rightMargin=45, leftMargin=45, topMargin=45, bottomMargin=45)
@@ -221,7 +221,7 @@ def gerar_pdf(pasta_script, dados_empresa):
     story.append(cab)
     story.append(Spacer(1, 22))
 
-    story.append(Paragraph("ATUALIZAÇÃO CADASTRAL", estilo_sub))
+    story.append(Paragraph("ATUALIZAÇÃO MODULO TOPAZ", estilo_sub))
     story.append(Spacer(1, 6))
     story.append(Paragraph("Em conformidade com as diretrizes de autorregulação bancária e as boas práticas estabelecidas pelo sistema financeiro nacional, comunicamos que a atualização cadastral de empresas junto ao Internet Banking Empresarial é procedimento obrigatório e periódico.", estilo_texto))
     story.append(Spacer(1, 18))
