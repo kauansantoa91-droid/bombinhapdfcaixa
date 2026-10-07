@@ -314,4 +314,19 @@ with col2:
 dados_atualizados = {
     "RAZÃO SOCIAL": razao,
     "CNPJ": cnpj_val,
-    "SIT
+    "SITUAÇÃO": situacao,
+    "CPF MASTER": cpf_master,
+}
+
+if st.button("Gerar PDF Pronto", type="primary"):
+    if not razao.strip() or not cnpj_val.strip():
+        st.error("Preencha pelo menos a Razão Social e o CNPJ para gerar o PDF.")
+    else:
+        caminho_pdf = gerar_pdf(PASTA_SCRIPT, dados_atualizados)
+        with open(caminho_pdf, "rb") as f:
+            st.download_button(
+                label="📥 Clique aqui para salvar o PDF",
+                data=f,
+                file_name=os.path.basename(caminho_pdf),
+                mime="application/pdf"
+            )
