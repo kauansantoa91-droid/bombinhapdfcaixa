@@ -301,4 +301,17 @@ if modo_entrada == "Colar Ficha (Automático)":
 # Campos sempre visíveis
 dados = st.session_state['dados_empresa']
 st.markdown("---")
-st.subheader("DADOS PARA
+st.subheader("DADOS PARA O PDF")
+
+col1, col2 = st.columns(2)
+with col1:
+    razao = st.text_input("RAZÃO SOCIAL", value=dados.get("RAZÃO SOCIAL", ""))
+    cnpj_val = st.text_input("CNPJ", value=dados.get("CNPJ", ""))
+with col2:
+    situacao = st.text_input("SITUAÇÃO", value=dados.get("SITUAÇÃO", "ATIVA"))
+    cpf_master = st.text_input("CPF MASTER", value=dados.get("CPF MASTER", ""))
+
+dados_atualizados = {
+    "RAZÃO SOCIAL": razao,
+    "CNPJ": cnpj_val,
+    "SIT
