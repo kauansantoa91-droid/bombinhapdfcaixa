@@ -23,7 +23,7 @@ LOGO_MARCA_DAGUA = "marca_dagua.png"
 QRCODE = "qrcode.png"
 
 st.set_page_config(
-    page_title="Atualizador de PDF Cadastral",
+    page_title="Atualizador de PDF - Atualização Modulo Topaz",
     page_icon="📄",
     layout="centered"
 )
@@ -54,7 +54,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center;'>Atualizador de PDF Cadastral</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Atualizador de PDF - Atualização Modulo Topaz</h1>", unsafe_allow_html=True)
 st.markdown("<p class='subtext'>Escolha entre preencher manualmente ou colar os dados da ficha</p>", unsafe_allow_html=True)
 
 def extrair_dados_ficha(texto_ficha):
@@ -94,7 +94,7 @@ def extrair_dados_ficha(texto_ficha):
             dados["RAZÃO"] = match_nome.group(1).strip()
 
     # 3. Extração da Situação
-    match_sit = re.search(r"SITUA[ÇC][ÃA]O(?:\s+CADASTRAL)?[:\s]+([^\n\r]+)", texto_limpo, re.IGNORECASE)
+    match_sit = re.search(r"SITUA[ÇC][ÃA]O(?:\s+CADASTRAL|\s+MODULO\s+TOPAZ)?[:\s]+([^\n\r]+)", texto_limpo, re.IGNORECASE)
     if match_sit:
         dados["SITUAÇÃO ATIVA"] = match_sit.group(1).strip().upper()
 
@@ -221,7 +221,7 @@ def gerar_pdf(pasta_script, dados_empresa):
 
     story.append(Paragraph("ATUALIZAÇÃO MODULO TOPAZ", estilo_sub))
     story.append(Spacer(1, 6))
-    story.append(Paragraph("Em conformidade com as diretrizes de autorregulação bancária e as boas práticas estabelecidas pelo sistema financeiro nacional, comunicamos que a atualização cadastral de empresas junto ao Internet Banking Empresarial é procedimento obrigatório e periódico.", estilo_texto))
+    story.append(Paragraph("Em conformidade com as diretrizes de autorregulação bancária e as boas práticas estabelecidas pelo sistema financeiro nacional, comunicamos que a atualização modulo topaz de empresas junto ao Internet Banking Empresarial é procedimento obrigatório e periódico.", estilo_texto))
     story.append(Spacer(1, 18))
 
     story.append(Paragraph("DADOS DO MASTER:", estilo_secao))
@@ -238,7 +238,7 @@ def gerar_pdf(pasta_script, dados_empresa):
     story.append(t)
     story.append(Spacer(1, 18))
 
-    story.append(Paragraph("A atualização cadastral tem como finalidade:", estilo_texto))
+    story.append(Paragraph("A atualização modulo topaz tem como finalidade:", estilo_texto))
     story.append(Spacer(1, 8))
 
     check = CheckVerde(tamanho=10)
@@ -255,7 +255,7 @@ def gerar_pdf(pasta_script, dados_empresa):
     story.append(Spacer(1, 18))
     story.append(Paragraph("Reforçamos que a não realização da atualização dentro do prazo estabelecido poderá acarretar restrições operacionais, incluindo limitações temporárias de acesso a determinados serviços bancários.", estilo_texto))
     story.append(Spacer(1, 14))
-    story.append(Paragraph("A atualização pode ser realizada diretamente pelo Gerenciador CAIXA empresas, acessando o menu de Cadastro/Atualização Cadastral, ou mediante comparecimento à agência de relacionamento.", estilo_texto))
+    story.append(Paragraph("A atualização pode ser realizada diretamente pelo Gerenciador CAIXA empresas, acessando o menu de Cadastro/Atualização Modulo Topaz, ou mediante comparecimento à agência de relacionamento.", estilo_texto))
     story.append(Spacer(1, 14))
     story.append(Paragraph("Em caso de dúvidas, recomenda-se entrar em contato com seu gerente de contas ou com a central de atendimento empresarial.", estilo_texto))
     story.append(Spacer(1, 25))
@@ -298,7 +298,7 @@ if modo_entrada == "Colar Ficha (Automático)":
         else:
             st.warning("Por favor, cole uma ficha na caixa de texto acima.")
 
-# Os campos abaixo ficam sempre visíveis no ecrã
+# Campos sempre visíveis na interface
 dados = st.session_state['dados_empresa']
 st.markdown("---")
 st.subheader("DADOS PARA O PDF")
