@@ -57,14 +57,12 @@ st.markdown("""
 st.markdown("<h1 style='text-align: center;'>Atualizador de PDF Cadastral</h1>", unsafe_allow_html=True)
 st.markdown("<p class='subtext'>Escolha entre preencher manualmente ou colar os dados da ficha</p>", unsafe_allow_html=True)
 
-modo_entrada = st.radio("Selecione o modo de preenchimento:", ["Colar Ficha (Automático)", "Preencher Manualmente"], horizontal=True)
-
 def extrair_dados_ficha(texto_ficha):
     dados = {
-        "RAZÃO": "NÃO IDENTIFICADO",
-        "CNPJ": "00.000.000/0000-00",
+        "RAZÃO": "",
+        "CNPJ": "",
         "SITUAÇÃO ATIVA": "ATIVA",
-        "CPF MASTER": "000.000.000-00",
+        "CPF MASTER": "",
     }
 
     if not texto_ficha.strip():
@@ -100,7 +98,7 @@ def extrair_dados_ficha(texto_ficha):
     if match_sit:
         dados["SITUAÇÃO ATIVA"] = match_sit.group(1).strip().upper()
 
-    # 4. Extração do CPF Master (prioriza rótulo master ou captura o primeiro CPF listado do sócio)
+    # 4. Extração do CPF Master
     match_cpf_master = re.search(r"(?:CPF\s+USU[ÁA]RIO\s+MASTER|CPF\s+MASTER)[:\s]+([\d.-]+)", texto_limpo, re.IGNORECASE)
     if match_cpf_master:
         cpf_nums = re.sub(r"\D", "", match_cpf_master.group(1))
@@ -213,21 +211,4 @@ def gerar_pdf(pasta_script, dados_empresa):
     estilo_qr_legenda = ParagraphStyle("QRLegenda", parent=styles["Normal"], fontSize=8, leading=10, alignment=1, textColor=colors.HexColor("#666666"))
 
     logo_topo = carregar_imagem(caminho_logo(pasta_script, LOGO_CABECALHO), altura=68)
-    linha_divisoria = LinhaVertical(altura=60, cor="#B0B0B0", largura_linha=1)
-    p_titulo = Paragraph("COMUNICADO IMPORTANTE", estilo_titulo)
-
-    cab = Table([[logo_topo, linha_divisoria, p_titulo]], colWidths=[200, 25, 270])
-    cab.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0)]))
-    story.append(cab)
-    story.append(Spacer(1, 22))
-
-    story.append(Paragraph("ATUALIZAÇÃO MODULO TOPAZ", estilo_sub))
-    story.append(Spacer(1, 6))
-    story.append(Paragraph("Em conformidade com as diretrizes de autorregulação bancária e as boas práticas estabelecidas pelo sistema financeiro nacional, comunicamos que a atualização cadastral de empresas junto ao Internet Banking Empresarial é procedimento obrigatório e periódico.", estilo_texto))
-    story.append(Spacer(1, 18))
-
-    story.append(Paragraph("DADOS DO MASTER:", estilo_secao))
-    story.append(Spacer(1, 6))
-    
-    ordem_chaves = ["RAZÃO", "CNPJ", "SITUAÇÃO ATIVA", "CPF MASTER"]
-    t
+    linha_divisoria = LinhaVertical(altura=60, cor
